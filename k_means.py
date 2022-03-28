@@ -1,3 +1,5 @@
+import sys
+
 from tools import *
 import numpy as np
 
@@ -34,7 +36,7 @@ class KMeans:
 
     def evaluate_end(self, new_centers, stopping_value):
         for center_idx in range(len(self.centers)):
-            if np.sqrt(np.sum((new_centers[center_idx] - self.centers[center_idx])**2)) > stopping_value:
+            if np.sqrt(np.sum((new_centers[center_idx] - self.centers[center_idx]) ** 2)) > stopping_value:
                 return False
         return True
 
@@ -57,10 +59,22 @@ class KMeans:
         return distances
 
 
-# EXPERIMENT
-n_clusters = 3
-dataset, labels, n_features = generate_input(1000, n_clusters, 2, random_seed=1)
-cluster = KMeans(dataset, labels, n_features, n_clusters)
-cluster.clustering_algorithm(0.001)
-plot_result(cluster.samples, cluster.learning_labels, cluster.centers)
-generate_gif(cluster.images)
+def main():
+    # argv = [number of samples, num_features,clusters in data, clusters to classify, epsilon]
+    args = sys.argv
+    n_samples = int(args[1])
+    num_features = int(args[2])
+    num_centers = int(args[3])
+    clusters_classify = int(args[4])
+    stopping_value = float(args[5])
+    random_seed = int(args[6])
+
+    dataset, labels, n_features = generate_input(n_samples, num_centers, num_features, random_seed)
+    cluster = KMeans(dataset, labels, n_features, clusters_classify)
+    cluster.clustering_algorithm(stopping_value)
+    plot_result(cluster.samples, cluster.learning_labels, cluster.centers)
+    generate_gif(cluster.images)
+
+
+if __name__ == '__main__':
+    main()

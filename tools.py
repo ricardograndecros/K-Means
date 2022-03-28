@@ -1,6 +1,8 @@
+import sys
+
 import imageio
+import subprocess
 from sklearn import datasets
-from os import listdir
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -34,6 +36,7 @@ def plot_result(samples, labels, centers, iteration=None, frame=False):
     else:
         filename = f'./experiment/experiment_samples{len(samples)}_clusters{len(centers)}.png'
         plt.savefig(filename)
+        plt.show()
 
     plt.close()
 
@@ -46,8 +49,12 @@ def generate_gif(filename_list):
     :param filename_list: list of image filenames
     :return: saves a gif movie in root path
     """
-
+    path = "./experiment/movie.gif"
     images = []
     for filename in filename_list:
         images.append(imageio.imread(filename))
-    imageio.mimsave("./experiment/movie.gif", images)
+    imageio.mimsave(path, images)
+    image_viewer_from_command_line = {'linux': 'xdg-open',
+                                  'win32': 'explorer',
+                                  'darwin': 'open'}[sys.platform]
+    subprocess.run([image_viewer_from_command_line, path])
